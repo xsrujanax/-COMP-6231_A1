@@ -12,7 +12,7 @@ import java.util.List;
 public class LeaderElection implements Watcher {
     private static final String ZOOKEEPER_ADDRESS = "localhost:2181";
     private static final int SESSION_TIMEOUT = 3000;
-    private static final String ELECTION_NAMESPACE = "/election";
+    private static final String ELECTION_NAMESPACE = "/election/order_management";
     private ZooKeeper zooKeeper;
     private String currentZnodeName;
 
@@ -20,13 +20,12 @@ public class LeaderElection implements Watcher {
      * Establishes a connection to the ZooKeeper server.
      * @throws IOException if an I/O error occurs when attempting to connect.
      */
-    public void connectToZookeeper() throws IOException {
+    public void connectToZookeeper(){
         try {
             this.zooKeeper = new ZooKeeper(ZOOKEEPER_ADDRESS, SESSION_TIMEOUT, this);
             System.out.println("Connecting to Zookeeper at " + ZOOKEEPER_ADDRESS);
         } catch (IOException e) {
-            System.out.println("Failed to connect to Zookeeper");
-            throw e;
+            System.err.println("Failed to connect to Zookeeper" + e);
         }
     }
 
@@ -56,13 +55,12 @@ public class LeaderElection implements Watcher {
      *
      * @throws InterruptedException if the thread is interrupted while waiting.
      */
-    public void run() throws InterruptedException {
+    public void run() {
         synchronized (zooKeeper){
             try {
                 zooKeeper.wait();
             }catch (InterruptedException e){
-                System.out.println("Thread interrupted");
-                throw e;
+                System.err.println("Thread interrupted" + e.getMessage());
             }
         }
     }
@@ -72,12 +70,12 @@ public class LeaderElection implements Watcher {
      *
      * @throws InterruptedException if the thread is interrupted during the process.
      */
-    public void close() throws InterruptedException {
+    public void close()  {
         try {
             zooKeeper.close();
             System.out.println("ZooKeeper connection closed");
         } catch (InterruptedException e) {
-            System.out.println("Failed to close ZooKeeper connection");
+            System.err.println("Failed to close ZooKeeper connection: " + e.getMessage());
         }
     }
 
