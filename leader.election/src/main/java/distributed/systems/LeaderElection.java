@@ -50,20 +50,6 @@ public class LeaderElection implements Watcher {
         }
     }
 
-    /**
-     * Main method that keeps the application running, waiting for the connection to be closed.
-     *
-     * @throws InterruptedException if the thread is interrupted while waiting.
-     */
-    public void run() {
-        synchronized (zooKeeper){
-            try {
-                zooKeeper.wait();
-            }catch (InterruptedException e){
-                System.err.println("Thread interrupted" + e.getMessage());
-            }
-        }
-    }
 
     /**
      * Closes the ZooKeeper connection.
@@ -76,6 +62,21 @@ public class LeaderElection implements Watcher {
             System.out.println("ZooKeeper connection closed");
         } catch (InterruptedException e) {
             System.err.println("Failed to close ZooKeeper connection: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Main method that keeps the application running, waiting for the connection to be closed.
+     *
+     * @throws InterruptedException if the thread is interrupted while waiting.
+     */
+    public void run() {
+        synchronized (zooKeeper){
+            try {
+                zooKeeper.wait();
+            }catch (InterruptedException e){
+                System.err.println("Thread interrupted" + e.getMessage());
+            }
         }
     }
 
