@@ -7,6 +7,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Group project: COMP-6231_A1
+ * Srujana Guttula, Student ID- 40237663
+ * Taranjeet Kaur, Student ID- 40263787.
+ */
+
+/**
  * Handles leader election for a distributed system using Apache ZooKeeper.
  */
 public class LeaderElection implements Watcher {
@@ -80,6 +86,30 @@ public class LeaderElection implements Watcher {
         }
     }
 
+
+    /**
+     * Picks the smallest child( earliest volunteer) as leader and prints the result.
+     *
+     * @throws KeeperException if there is an error interacting with ZooKeeper.
+     * @throws InterruptedException if the thread is interrupted.
+     */
+    public void electLeader() throws  KeeperException, InterruptedException{
+        try{
+            List<String> children = zooKeeper.getChildren(ELECTION_NAMESPACE, false);
+            Collections.sort(children);
+            String smallestChild = children.get(0);
+            if(smallestChild.equals(currentZnodeName)){
+                System.out.println("I'm the leader!");
+                return;
+            }
+            System.out.println("Im not the leader!," + smallestChild+" is the leader!");
+        } catch (KeeperException | InterruptedException e){
+            System.out.println("Failed during the election process");
+            throw e;
+        }
+
+    }
+
     /**
      * Volunteers this instance for leadership by creating a znode in ZooKeeper.
      *
@@ -97,28 +127,5 @@ public class LeaderElection implements Watcher {
             System.out.println("Failed to volunteer for leadership");
             throw e;
         }
-    }
-
-    /**
-     * Volunteers this instance for leadership by creating a znode in ZooKeeper.
-     *
-     * @throws KeeperException if there is an error interacting with ZooKeeper.
-     * @throws InterruptedException if the thread is interrupted.
-     */
-    public void electLeader() throws  KeeperException, InterruptedException{
-        try{
-            List<String> children = zooKeeper.getChildren(ELECTION_NAMESPACE, false);
-            Collections.sort(children);
-            String smallestChild = children.get(0);
-            if(smallestChild.equals(currentZnodeName)){
-                System.out.println("I'm the leader");
-                return;
-            }
-            System.out.println("Im not the leader," + smallestChild+" is the leader");
-        } catch (KeeperException | InterruptedException e){
-            System.out.println("Failed during the election process");
-            throw e;
-        }
-
     }
 }

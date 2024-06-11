@@ -5,6 +5,12 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
+ * Group project: COMP-6231_A1
+ * Srujana Guttula, Student ID- 40237663
+ * Taranjeet Kaur, Student ID- 40263787.
+ */
+
+/**
  * Unit test for simple App.
  */
 public class AppTest 
