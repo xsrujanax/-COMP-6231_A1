@@ -12,6 +12,6 @@ public class Main {
         leaderElection.electLeader();
         leaderElection.run();
         leaderElection.close();
-        System.out.println("Disconnected from Zookeeper, existing application");
+        System.out.println("Disconnected from Zookeeper, exiting application");
     }
 }

@@ -91,7 +91,7 @@ public class LeaderElection implements Watcher {
             String znodePrefix = ELECTION_NAMESPACE + "/c_";
             String znodeFullPath = zooKeeper.create(znodePrefix, new byte[]{}, ZooDefs.Ids.OPEN_ACL_UNSAFE,CreateMode.EPHEMERAL_SEQUENTIAL);
             System.out.println("znode created" + znodeFullPath);
-            this.currentZnodeName = znodeFullPath.replace("/election/","");
+            this.currentZnodeName = znodeFullPath.replace("/election/order_management/","");
         } catch (KeeperException | InterruptedException e) {
             System.out.println("Failed to volunteer for leadership");
             throw e;
@@ -109,7 +109,6 @@ public class LeaderElection implements Watcher {
             List<String> children = zooKeeper.getChildren(ELECTION_NAMESPACE, false);
             Collections.sort(children);
             String smallestChild = children.get(0);
-
             if(smallestChild.equals(currentZnodeName)){
                 System.out.println("I'm the leader");
                 return;
